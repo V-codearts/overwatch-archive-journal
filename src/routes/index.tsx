@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Plus, Archive, Sword, Skull, Star } from "lucide-react";
 import { toast } from "sonner";
 import { newRole, useStore } from "@/lib/store";
@@ -26,44 +26,59 @@ export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
-function useLiveClock() {
+function LiveClock() {
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
-  return now;
+  return (
+    <div className="font-display text-4xl font-bold tabular-nums tracking-wider text-foreground sm:text-5xl">
+      {formatClock(now)}
+    </div>
+  );
 }
 
 function Dashboard() {
   const { current, updateCurrent, archiveDay } = useStore();
-  const now = useLiveClock();
   const [archiveOpen, setArchiveOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [ratingNote, setRatingNote] = useState("");
 
-  const totals = current.roles.reduce(
-    (acc, r) => {
-      acc.wins += r.wins;
-      acc.losses += r.losses;
-      acc.winBonus += r.winBonus;
-      acc.lossBonus += r.lossBonus;
-      return acc;
-    },
-    { wins: 0, losses: 0, winBonus: 0, lossBonus: 0 },
+  const totals = useMemo(
+    () =>
+      current.roles.reduce(
+        (acc, r) => {
+          acc.wins += r.wins;
+          acc.losses += r.losses;
+          acc.winBonus += r.winBonus;
+          acc.lossBonus += r.lossBonus;
+          return acc;
+        },
+        { wins: 0, losses: 0, winBonus: 0, lossBonus: 0 },
+      ),
+    [current.roles],
   );
 
-  const patchRole = (id: string, patch: Partial<RoleEntry>) =>
-    updateCurrent((d) => ({
-      ...d,
-      roles: d.roles.map((r) => (r.id === id ? { ...r, ...patch } : r)),
-    }));
+  const patchRole = useCallback(
+    (id: string, patch: Partial<RoleEntry>) =>
+      updateCurrent((d) => ({
+        ...d,
+        roles: d.roles.map((r) => (r.id === id ? { ...r, ...patch } : r)),
+      })),
+    [updateCurrent],
+  );
 
-  const addRole = () =>
-    updateCurrent((d) => ({ ...d, roles: [...d.roles, newRole("Damage")] }));
+  const addRole = useCallback(
+    () => updateCurrent((d) => ({ ...d, roles: [...d.roles, newRole("Damage")] })),
+    [updateCurrent],
+  );
 
-  const removeRole = (id: string) =>
-    updateCurrent((d) => ({ ...d, roles: d.roles.filter((r) => r.id !== id) }));
+  const removeRole = useCallback(
+    (id: string) =>
+      updateCurrent((d) => ({ ...d, roles: d.roles.filter((r) => r.id !== id) })),
+    [updateCurrent],
+  );
 
   const handleArchive = () => {
     archiveDay({ rating: rating || undefined, ratingNote: ratingNote.trim() || undefined });
@@ -90,9 +105,7 @@ function Dashboard() {
             <div className="font-display text-xs uppercase tracking-[0.35em] text-muted-foreground">
               Local Time
             </div>
-            <div className="font-display text-4xl font-bold tabular-nums tracking-wider text-foreground sm:text-5xl">
-              {formatClock(now)}
-            </div>
+            <LiveClock />
           </div>
         </div>
         <Timer />
