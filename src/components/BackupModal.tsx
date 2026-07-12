@@ -24,6 +24,7 @@ export function BackupModal({ children }: { children: React.ReactNode }) {
     currentDate: string;
     historyCount: number;
   } | null>(null);
+  const [restoring, setRestoring] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleExport = async () => {
