@@ -60,9 +60,7 @@ export function BackupModal({ children }: { children: React.ReactNode }) {
     try {
       const backup = await readBackupFile(fileRef.current.files[0]);
       await applyBackup(backup);
-      setPending(null);
-      setStatus({ type: "success", message: "Backup restored. Reloading..." });
-      setTimeout(() => window.location.reload(), 600);
+      window.location.reload();
     } catch (err) {
       setStatus({
         type: "error",
