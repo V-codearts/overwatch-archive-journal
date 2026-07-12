@@ -1,7 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, StickyNote, History, LineChart } from "lucide-react";
+import { LayoutDashboard, StickyNote, History, LineChart, Settings } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { BackupModal } from "@/components/BackupModal";
 
 const NAV: ReadonlyArray<{
   to: "/" | "/notes" | "/history" | "/overview";
