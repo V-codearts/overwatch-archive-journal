@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, StickyNote, History, LineChart, Shield } from "lucide-react";
+import { LayoutDashboard, StickyNote, History, LineChart } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -20,20 +20,7 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/70 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-          <Link to="/" className="group flex items-center gap-3">
-            <div className="relative grid h-10 w-10 place-items-center rounded-xl border border-primary/40 bg-primary/10 text-primary transition-all group-hover:bg-primary/20 group-hover:shadow-[0_0_20px_var(--color-glow)]">
-              <Shield className="h-5 w-5" strokeWidth={2.4} />
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="font-display text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                Overwatch
-              </span>
-              <span className="font-display text-lg font-bold tracking-wide text-foreground">
-                Competitive Journal
-              </span>
-            </div>
-          </Link>
+        <div className="mx-auto flex h-14 max-w-7xl items-center justify-center px-4 sm:px-6">
           <nav className="hidden items-center gap-1 md:flex">
             {NAV.map((item) => {
               const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
