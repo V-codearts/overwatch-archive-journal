@@ -131,7 +131,7 @@ function HistoryPage() {
                       </div>
                     ) : null}
                     {d.ratingNote && (
-                      <p className="line-clamp-2 italic text-muted-foreground">"{d.ratingNote}"</p>
+                      <p className="select-text line-clamp-2 italic text-muted-foreground">"{d.ratingNote}"</p>
                     )}
                   </div>
                 )}
