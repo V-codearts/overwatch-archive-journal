@@ -122,10 +122,10 @@ export function BackupModal({ children }: { children: React.ReactNode }) {
                 This will replace all local data.
               </p>
               <div className="mt-3 flex gap-2">
-                <Button size="sm" className="flex-1" onClick={confirmImport}>
-                  Restore
+                <Button size="sm" className="flex-1" onClick={confirmImport} disabled={restoring}>
+                  {restoring ? "Restoring..." : "Restore"}
                 </Button>
-                <Button size="sm" variant="outline" className="flex-1" onClick={cancelImport}>
+                <Button size="sm" variant="outline" className="flex-1" onClick={cancelImport} disabled={restoring}>
                   Cancel
                 </Button>
               </div>
