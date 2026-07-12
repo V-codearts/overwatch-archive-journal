@@ -139,7 +139,7 @@ function Dashboard() {
             }
           >
             <Sword className="mr-2 h-5 w-5" />
-            Win
+            <span className="font-display uppercase tracking-widest">Win</span>
           </Button>
           <Button
             size="lg"
@@ -150,7 +150,7 @@ function Dashboard() {
             }
           >
             <Skull className="mr-2 h-5 w-5" />
-            Loss
+            <span className="font-display uppercase tracking-widest">Loss</span>
           </Button>
         </div>
       </div>
