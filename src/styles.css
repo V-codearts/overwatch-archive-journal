@@ -100,12 +100,19 @@
 @layer base {
   * {
     border-color: var(--color-border);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  *::-webkit-scrollbar {
+    display: none;
   }
   html, body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    user-select: none;
+    -webkit-user-select: none;
   }
   body {
     background-image:
@@ -118,6 +125,10 @@
   h1, h2, h3, h4, .font-display {
     font-family: var(--font-display);
     letter-spacing: 0.02em;
+  }
+  input, textarea, [contenteditable="true"], .select-text {
+    user-select: text;
+    -webkit-user-select: text;
   }
 }
 
