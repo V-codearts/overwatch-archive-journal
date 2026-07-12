@@ -21,6 +21,7 @@ import { Timer } from "@/components/Timer";
 import { RoleCard } from "@/components/RoleCard";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { signed, formatDate, formatClock } from "@/lib/format";
+import { memo } from "react";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
@@ -179,11 +180,11 @@ function Dashboard() {
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
         {current.roles.map((role) => (
-          <RoleCard
+          <RoleCardBinding
             key={role.id}
             role={role}
-            onChange={(patch) => patchRole(role.id, patch)}
-            onRemove={current.roles.length > 1 ? () => removeRole(role.id) : undefined}
+            patchRole={patchRole}
+            removeRole={current.roles.length > 1 ? removeRole : undefined}
           />
         ))}
       </div>
