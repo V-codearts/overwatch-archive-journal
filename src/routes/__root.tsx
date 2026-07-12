@@ -84,17 +84,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "A premium personal competitive journal for Overwatch — log sessions, track ranks, and review progress. Offline-first.",
+          "Yarrimean",
       },
       { property: "og:title", content: "Overwatch Competitive Journal" },
       {
         property: "og:description",
         content:
-          "A premium personal competitive journal for Overwatch — log sessions, track ranks, and review progress. Offline-first.",
+          "Yarrimean",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "theme-color", content: "#f57e28" },
+      { name: "twitter:title", content: "Overwatch Competitive Journal" },
+      { name: "twitter:description", content: "Yarrimean" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3dc66d46-a1a0-4b86-983e-9b0e9ade8194/id-preview-72f92efe--f966bfb9-e00e-41ab-99a7-4887ffd0807c.lovable.app-1783879886532.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3dc66d46-a1a0-4b86-983e-9b0e9ade8194/id-preview-72f92efe--f966bfb9-e00e-41ab-99a7-4887ffd0807c.lovable.app-1783879886532.png" },
     ],
     links: [
       {
