@@ -57,12 +57,14 @@ export function BackupModal({ children }: { children: React.ReactNode }) {
   };
 
   const confirmImport = async () => {
-    if (!pendingFile) return;
+    if (!pendingFile || restoring) return;
+    setRestoring(true);
     try {
       const backup = await readBackupFile(pendingFile);
       await applyBackup(backup);
-      setTimeout(() => window.location.reload(), 50);
+      setTimeout(() => window.location.reload(), 150);
     } catch (err) {
+      setRestoring(false);
       setStatus({
         type: "error",
         message: err instanceof Error ? err.message : "Restore failed.",
