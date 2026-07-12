@@ -40,6 +40,26 @@ function LiveClock() {
   );
 }
 
+const RoleCardBinding = memo(function RoleCardBinding({
+  role,
+  patchRole,
+  removeRole,
+}: {
+  role: RoleEntry;
+  patchRole: (id: string, patch: Partial<RoleEntry>) => void;
+  removeRole?: (id: string) => void;
+}) {
+  const onChange = useCallback(
+    (patch: Partial<RoleEntry>) => patchRole(role.id, patch),
+    [patchRole, role.id],
+  );
+  const onRemove = useMemo(
+    () => (removeRole ? () => removeRole(role.id) : undefined),
+    [removeRole, role.id],
+  );
+  return <RoleCard role={role} onChange={onChange} onRemove={onRemove} />;
+});
+
 function Dashboard() {
   const { current, updateCurrent, archiveDay } = useStore();
   const [archiveOpen, setArchiveOpen] = useState(false);
