@@ -64,9 +64,6 @@ function HistoryPage() {
           <Archive className="h-4 w-4" /> History
         </div>
         <h1 className="font-display text-3xl font-bold tracking-wide">Archived Sessions</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {history.length} session{history.length === 1 ? "" : "s"} archived. Click any card to edit.
-        </p>
       </div>
 
       {history.length === 0 ? (
