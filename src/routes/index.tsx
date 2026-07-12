@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Plus, Trophy, Archive, Sword, Skull, Star } from "lucide-react";
+import { Plus, Archive, Sword, Skull, Star } from "lucide-react";
 import { toast } from "sonner";
 import { newRole, useStore } from "@/lib/store";
 import type { RoleEntry } from "@/lib/types";
