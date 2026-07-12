@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Plus, Trophy, Archive, Sword, Skull, Star } from "lucide-react";
+import { Plus, Archive, Sword, Skull, Star } from "lucide-react";
 import { toast } from "sonner";
 import { newRole, useStore } from "@/lib/store";
 import type { RoleEntry } from "@/lib/types";
@@ -153,9 +153,6 @@ function Dashboard() {
             Loss
           </Button>
         </div>
-        <div className="mt-3 text-center text-xs text-muted-foreground">
-          Quick buttons record to <span className="text-foreground">{current.roles[0]?.role}</span>. Edit any role below.
-        </div>
       </div>
 
       {/* Roles */}
@@ -179,16 +176,7 @@ function Dashboard() {
       </div>
 
       {/* Archive */}
-      <div className="panel clip-notch flex flex-col items-center gap-4 p-6 sm:flex-row sm:justify-between sm:p-8">
-        <div>
-          <div className="flex items-center gap-2 font-display text-lg font-bold">
-            <Trophy className="h-5 w-5 text-primary" />
-            Ready to end the day?
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Archive this session to your History. A fresh day begins immediately.
-          </p>
-        </div>
+      <div className="panel clip-notch flex items-center justify-center p-6 sm:p-8">
         <AlertDialog open={archiveOpen} onOpenChange={setArchiveOpen}>
           <AlertDialogTrigger asChild>
             <Button size="lg" className="bg-primary text-primary-foreground shadow-[0_0_30px_var(--color-glow)] hover:bg-primary/90">
