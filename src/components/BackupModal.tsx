@@ -19,7 +19,8 @@ export function BackupModal({ children }: { children: React.ReactNode }) {
     type: "idle" | "success" | "error";
     message: string;
   }>({ type: "idle", message: "" });
-  const [pending, setPending] = useState<{
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const [pendingInfo, setPendingInfo] = useState<{
     currentDate: string;
     historyCount: number;
   } | null>(null);
@@ -41,7 +42,8 @@ export function BackupModal({ children }: { children: React.ReactNode }) {
     setStatus({ type: "idle", message: "" });
     try {
       const backup = await readBackupFile(file);
-      setPending({
+      setPendingFile(file);
+      setPendingInfo({
         currentDate: backup.current.date || "unsaved current session",
         historyCount: backup.history.length,
       });
@@ -50,15 +52,13 @@ export function BackupModal({ children }: { children: React.ReactNode }) {
         type: "error",
         message: err instanceof Error ? err.message : "Could not read backup.",
       });
-    } finally {
-      if (fileRef.current) fileRef.current.value = "";
     }
   };
 
   const confirmImport = async () => {
-    if (!fileRef.current?.files?.[0]) return;
+    if (!pendingFile) return;
     try {
-      const backup = await readBackupFile(fileRef.current.files[0]);
+      const backup = await readBackupFile(pendingFile);
       await applyBackup(backup);
       window.location.reload();
     } catch (err) {
@@ -70,7 +70,8 @@ export function BackupModal({ children }: { children: React.ReactNode }) {
   };
 
   const cancelImport = () => {
-    setPending(null);
+    setPendingFile(null);
+    setPendingInfo(null);
     if (fileRef.current) fileRef.current.value = "";
   };
 
@@ -105,14 +106,14 @@ export function BackupModal({ children }: { children: React.ReactNode }) {
             </Button>
           </div>
 
-          {pending && (
+          {pendingInfo && (
             <div className="rounded-lg border border-border/60 bg-muted/40 p-3 text-sm">
               <p className="mb-2">Restore backup?</p>
               <p className="text-muted-foreground">
-                Current session: {pending.currentDate}
+                Current session: {pendingInfo.currentDate}
               </p>
               <p className="text-muted-foreground">
-                History entries: {pending.historyCount}
+                History entries: {pendingInfo.historyCount}
               </p>
               <p className="mt-2 text-xs text-muted-foreground">
                 This will replace all local data.
@@ -128,7 +129,7 @@ export function BackupModal({ children }: { children: React.ReactNode }) {
             </div>
           )}
 
-          {status.type !== "idle" && !pending && (
+          {status.type !== "idle" && !pendingInfo && (
             <div
               className={`flex items-center gap-2 rounded-lg p-3 text-sm ${
                 status.type === "success"
