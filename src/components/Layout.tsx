@@ -3,12 +3,17 @@ import { LayoutDashboard, StickyNote, History, LineChart, Shield } from "lucide-
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-const NAV = [
+const NAV: ReadonlyArray<{
+  to: "/" | "/notes" | "/history" | "/overview";
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+}> = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/notes", label: "Notes", icon: StickyNote },
   { to: "/history", label: "History", icon: History },
   { to: "/overview", label: "Overview", icon: LineChart },
-] as const;
+];
 
 export function Layout({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
