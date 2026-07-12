@@ -18,27 +18,28 @@ export function AnimatedCounter({
   suffix = "",
 }: Props) {
   const [display, setDisplay] = useState(value);
-  const fromRef = useRef(value);
   const startRef = useRef<number | null>(null);
   const rafRef = useRef<number | null>(null);
+  const displayRef = useRef(value);
 
   useEffect(() => {
-    fromRef.current = display;
+    if (value === displayRef.current) return;
     startRef.current = null;
+    const from = displayRef.current;
     const to = value;
-    const from = display;
     const tick = (t: number) => {
       if (startRef.current == null) startRef.current = t;
       const p = Math.min(1, (t - startRef.current) / duration);
       const eased = 1 - Math.pow(1 - p, 3);
-      setDisplay(from + (to - from) * eased);
+      const next = from + (to - from) * eased;
+      displayRef.current = next;
+      setDisplay(next);
       if (p < 1) rafRef.current = requestAnimationFrame(tick);
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, duration]);
 
   return (

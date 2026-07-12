@@ -10,6 +10,7 @@ interface Props {
 export function RichNotes({ html, onChange, placeholder, className }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const lastRef = useRef<string>(html);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (ref.current && html !== lastRef.current) {
@@ -29,10 +30,27 @@ export function RichNotes({ html, onChange, placeholder, className }: Props) {
   const commit = () => {
     if (!ref.current) return;
     const val = ref.current.innerHTML;
-    lastRef.current = val;
-    onChange(val);
     updateEmpty();
+    if (val === lastRef.current) return;
+    lastRef.current = val;
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => onChange(val), 200);
   };
+
+  const flush = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    if (ref.current && ref.current.innerHTML !== lastRef.current) {
+      lastRef.current = ref.current.innerHTML;
+    }
+    onChange(lastRef.current);
+  };
+
+  useEffect(() => () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+  }, []);
 
   const handlePaste = async (e: React.ClipboardEvent<HTMLDivElement>) => {
     const items = e.clipboardData?.items;
@@ -67,7 +85,7 @@ export function RichNotes({ html, onChange, placeholder, className }: Props) {
       contentEditable
       suppressContentEditableWarning
       onInput={commit}
-      onBlur={commit}
+      onBlur={flush}
       onPaste={handlePaste}
       data-placeholder={placeholder || "Start writing…"}
       data-empty="true"

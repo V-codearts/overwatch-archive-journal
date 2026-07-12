@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Minus, Plus, Trash2, TrendingUp, TrendingDown } from "lucide-react";
 import type { RoleEntry } from "@/lib/types";
 import { ROLE_PRESETS } from "@/lib/types";
@@ -21,7 +22,7 @@ interface Props {
   onRemove?: () => void;
 }
 
-export function RoleCard({ role, onChange, onRemove }: Props) {
+function RoleCardImpl({ role, onChange, onRemove }: Props) {
   const games = role.wins + role.losses;
   const wr = games > 0 ? Math.round((role.wins / games) * 100) : 0;
   const delta = rankDelta(role.startingRank, role.currentRank);
@@ -122,6 +123,8 @@ export function RoleCard({ role, onChange, onRemove }: Props) {
     </div>
   );
 }
+
+export const RoleCard = memo(RoleCardImpl);
 
 function Counter({
   label,
