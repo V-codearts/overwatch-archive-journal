@@ -55,7 +55,7 @@ interface Ctx {
   updateCurrent: (fn: (d: DaySession) => DaySession) => void;
   updateHistory: (id: string, fn: (d: DaySession) => DaySession) => void;
   deleteHistory: (id: string) => void;
-  archiveDay: () => void;
+  archiveDay: (opts?: { rating?: number; ratingNote?: string }) => void;
   resetCurrent: () => void;
 }
 
@@ -101,20 +101,28 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setHistory((prev) => prev.filter((d) => d.id !== id));
   }, []);
 
-  const archiveDay = useCallback(() => {
-    setCurrent((prev) => {
-      const now = Date.now();
-      const accumulated =
-        prev.timer.accumulatedMs + (prev.timer.runningSince ? now - prev.timer.runningSince : 0);
-      const archived: DaySession = {
-        ...prev,
-        archivedAt: now,
-        timer: { accumulatedMs: accumulated, runningSince: null },
-      };
-      setHistory((h) => [archived, ...h]);
-      return newDay();
-    });
-  }, []);
+  const archiveDay = useCallback(
+    (opts?: { rating?: number; ratingNote?: string }) => {
+      setCurrent((prev) => {
+        const now = Date.now();
+        const accumulated =
+          prev.timer.accumulatedMs +
+          (prev.timer.runningSince ? now - prev.timer.runningSince : 0);
+        const archived: DaySession = {
+          ...prev,
+          archivedAt: now,
+          rating: opts?.rating,
+          ratingNote: opts?.ratingNote,
+          timer: { accumulatedMs: accumulated, runningSince: null },
+        };
+        // Guard against StrictMode double-invocation of the setState updater
+        // duplicating the archived entry in history.
+        setHistory((h) => (h.some((d) => d.id === archived.id) ? h : [archived, ...h]));
+        return newDay();
+      });
+    },
+    [],
+  );
 
   const resetCurrent = useCallback(() => setCurrent(newDay()), []);
 
