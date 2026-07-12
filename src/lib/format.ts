@@ -9,7 +9,7 @@ export function formatDuration(ms: number, opts: { compact?: boolean } = {}) {
     return `${sec}s`;
   }
   const pad = (n: number) => String(n).padStart(2, "0");
-  return `${pad(h)}:${pad(m)}:${pad(sec)}`;
+  return `${pad(h)} ${pad(m)} ${pad(sec)}`;
 }
 
 export function formatHours(ms: number) {
@@ -19,17 +19,21 @@ export function formatHours(ms: number) {
 
 export function formatDate(dateStr: string) {
   const d = new Date(dateStr + "T00:00:00");
-  return d.toLocaleDateString(undefined, {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  return `${day} ${month} ${d.getFullYear()}`;
 }
 
 export function formatDateShort(dateStr: string) {
   const d = new Date(dateStr + "T00:00:00");
-  return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  return `${day} ${month}`;
+}
+
+export function formatClock(date: Date) {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(date.getHours())} ${pad(date.getMinutes())} ${pad(date.getSeconds())}`;
 }
 
 export function signed(n: number) {

@@ -23,6 +23,8 @@ export interface DaySession {
   roles: RoleEntry[];
   notesHtml: string;
   timer: TimerState;
+  rating?: number;
+  ratingNote?: string;
 }
 
 export const ROLE_PRESETS = [

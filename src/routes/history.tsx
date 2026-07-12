@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Archive, Clock, Trash2, Pencil, Plus } from "lucide-react";
+import { Archive, Clock, Trash2, Pencil, Plus, Star } from "lucide-react";
 import { toast } from "sonner";
 import { useStore, newRole } from "@/lib/store";
 import type { DaySession, RoleEntry } from "@/lib/types";
@@ -115,6 +115,27 @@ function HistoryPage() {
                         <span className="text-foreground">{r.role}</span> {formatRank(r.startingRank)} → <span className="text-primary">{formatRank(r.currentRank)}</span>
                       </span>
                     ))}
+                  </div>
+                )}
+                {(d.rating || d.ratingNote) && (
+                  <div className="mt-3 flex items-start gap-2 border-t border-border/40 pt-3 text-xs">
+                    {d.rating ? (
+                      <div className="flex shrink-0 items-center gap-0.5">
+                        {[1, 2, 3, 4, 5].map((n) => (
+                          <Star
+                            key={n}
+                            className={`h-3.5 w-3.5 ${
+                              n <= (d.rating || 0)
+                                ? "fill-primary text-primary"
+                                : "text-muted-foreground/40"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    ) : null}
+                    {d.ratingNote && (
+                      <p className="line-clamp-2 italic text-muted-foreground">"{d.ratingNote}"</p>
+                    )}
                   </div>
                 )}
                 <div className="mt-4 flex items-center justify-end gap-1 text-xs text-primary opacity-0 transition-opacity group-hover:opacity-100">

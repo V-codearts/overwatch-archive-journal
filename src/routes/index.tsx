@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Plus, Trophy, Archive, Sword, Skull } from "lucide-react";
+import { Plus, Trophy, Archive, Sword, Skull, Star } from "lucide-react";
 import { toast } from "sonner";
 import { newRole, useStore } from "@/lib/store";
 import type { RoleEntry } from "@/lib/types";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,7 +20,7 @@ import {
 import { Timer } from "@/components/Timer";
 import { RoleCard } from "@/components/RoleCard";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
-import { signed, formatDate } from "@/lib/format";
+import { signed, formatDate, formatClock } from "@/lib/format";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
@@ -37,6 +38,9 @@ function useLiveClock() {
 function Dashboard() {
   const { current, updateCurrent, archiveDay } = useStore();
   const now = useLiveClock();
+  const [archiveOpen, setArchiveOpen] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [ratingNote, setRatingNote] = useState("");
 
   const totals = current.roles.reduce(
     (acc, r) => {
@@ -62,7 +66,10 @@ function Dashboard() {
     updateCurrent((d) => ({ ...d, roles: d.roles.filter((r) => r.id !== id) }));
 
   const handleArchive = () => {
-    archiveDay();
+    archiveDay({ rating: rating || undefined, ratingNote: ratingNote.trim() || undefined });
+    setArchiveOpen(false);
+    setRating(0);
+    setRatingNote("");
     toast.success("Day archived. New session started.");
   };
 
@@ -83,12 +90,8 @@ function Dashboard() {
             <div className="font-display text-xs uppercase tracking-[0.35em] text-muted-foreground">
               Local Time
             </div>
-            <div className="font-display text-4xl font-bold tabular-nums text-foreground sm:text-5xl">
-              {now.toLocaleTimeString(undefined, {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-              })}
+            <div className="font-display text-4xl font-bold tabular-nums tracking-wider text-foreground sm:text-5xl">
+              {formatClock(now)}
             </div>
           </div>
         </div>
@@ -186,7 +189,7 @@ function Dashboard() {
             Archive this session to your History. A fresh day begins immediately.
           </p>
         </div>
-        <AlertDialog>
+        <AlertDialog open={archiveOpen} onOpenChange={setArchiveOpen}>
           <AlertDialogTrigger asChild>
             <Button size="lg" className="bg-primary text-primary-foreground shadow-[0_0_30px_var(--color-glow)] hover:bg-primary/90">
               <Archive className="mr-2 h-4 w-4" /> Archive Day
@@ -194,11 +197,54 @@ function Dashboard() {
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Archive this session?</AlertDialogTitle>
+              <AlertDialogTitle>Rate & archive this session</AlertDialogTitle>
               <AlertDialogDescription>
-                Your current day, roles, notes and timer will be saved to History and a new empty day will begin. Archived data remains editable.
+                Give this session a personal rating and a few words before it's saved to History. A fresh day begins immediately.
               </AlertDialogDescription>
             </AlertDialogHeader>
+            <div className="space-y-4 py-2">
+              <div>
+                <div className="mb-2 font-display text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+                  Rating
+                </div>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      onClick={() => setRating(n === rating ? 0 : n)}
+                      className="rounded p-1 transition-transform hover:scale-110"
+                      aria-label={`${n} star${n > 1 ? "s" : ""}`}
+                    >
+                      <Star
+                        className={`h-7 w-7 ${
+                          n <= rating
+                            ? "fill-primary text-primary drop-shadow-[0_0_8px_var(--color-glow)]"
+                            : "text-muted-foreground"
+                        }`}
+                      />
+                    </button>
+                  ))}
+                  {rating > 0 && (
+                    <span className="ml-2 font-display text-sm tabular-nums text-muted-foreground">
+                      {rating} / 5
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div>
+                <div className="mb-2 font-display text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+                  A few words
+                </div>
+                <Textarea
+                  value={ratingNote}
+                  onChange={(e) => setRatingNote(e.target.value)}
+                  placeholder="How did the session feel?"
+                  maxLength={200}
+                  rows={3}
+                />
+              </div>
+            </div>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction onClick={handleArchive}>Archive</AlertDialogAction>
