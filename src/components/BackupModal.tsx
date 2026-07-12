@@ -60,7 +60,7 @@ export function BackupModal({ children }: { children: React.ReactNode }) {
     try {
       const backup = await readBackupFile(pendingFile);
       await applyBackup(backup);
-      setTimeout(() => window.location.reload(), 100);
+      setTimeout(() => window.location.reload(), 50);
     } catch (err) {
       setStatus({
         type: "error",
