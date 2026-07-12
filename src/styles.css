@@ -4,6 +4,21 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+  font-family: "BigNoodleTooOblique";
+  src: url("/__l5e/assets-v1/2f821890-e0cb-4b92-8ed5-872749c86a67/bignoodletoooblique.ttf") format("truetype");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Futura No2 Demi";
+  src: url("/__l5e/assets-v1/356fd2ad-74d8-44cb-961c-fdaf5d886a14/futura-no2-d-demi-bold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -48,8 +63,9 @@
   --color-win: var(--win);
   --color-loss: var(--loss);
   --color-glow: var(--glow);
-  --font-display: "Rajdhani", "Inter", system-ui, sans-serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "BigNoodleTooOblique", "Rajdhani", "Inter", system-ui, sans-serif;
+  --font-sans: "Futura No2 Demi", "Inter", system-ui, sans-serif;
+  --font-user: "Inter", system-ui, sans-serif;
 }
 
 :root {
@@ -129,6 +145,7 @@
   input, textarea, [contenteditable="true"], .select-text {
     user-select: text;
     -webkit-user-select: text;
+    font-family: var(--font-user);
   }
 }
 
