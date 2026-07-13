@@ -238,6 +238,49 @@ function EditSession({
         />
       </div>
 
+      <div className="space-y-2">
+        <div className="font-display text-xs uppercase tracking-[0.3em] text-muted-foreground">Rating</div>
+        <div className="flex items-center gap-1">
+          {[1, 2, 3, 4, 5].map((n) => (
+            <button
+              key={n}
+              type="button"
+              onClick={() =>
+                onPatch((d) => ({ ...d, rating: d.rating === n ? undefined : n }))
+              }
+              className="p-1 transition-transform hover:scale-110"
+              aria-label={`Rate ${n} star${n === 1 ? "" : "s"}`}
+            >
+              <Star
+                className={`h-6 w-6 ${
+                  n <= (day.rating || 0)
+                    ? "fill-primary text-primary"
+                    : "text-muted-foreground/40"
+                }`}
+              />
+            </button>
+          ))}
+          {day.rating ? (
+            <Button
+              size="sm"
+              variant="ghost"
+              className="ml-2 text-xs text-muted-foreground"
+              onClick={() => onPatch((d) => ({ ...d, rating: undefined }))}
+            >
+              Clear
+            </Button>
+          ) : null}
+        </div>
+        <Input
+          value={day.ratingNote || ""}
+          onChange={(e) =>
+            onPatch((d) => ({ ...d, ratingNote: e.target.value || undefined }))
+          }
+          placeholder="A few words about this session…"
+          maxLength={200}
+        />
+      </div>
+
       <DialogFooter className="!justify-between">
         <AlertDialog>
           <AlertDialogTrigger asChild>
